@@ -8,7 +8,7 @@ const pageDiv = document.querySelector ( '.page' );
 const pageUl = pageDiv.querySelector ( 'ul' );
 const list = pageUl.children;
 
-//function displays only 10 students at a time per page
+//Function displays only 10 students per page. The rest are 'hidden'.
 const showPage = ( list, page ) => {
   for ( let i = 0; i < list.length; i += 1 ) {
     let firstPageItem = ( ( page * 10 ) - 10 );
@@ -21,45 +21,51 @@ const showPage = ( list, page ) => {
 }
 };
 
-showPage ( list, 1 );
-
-/*
 const appendPageLinks = ( list ) => {
 
-//total pages will change with student number variances.rounded up
+/*Total pages will change according to the student number in the list.
+All rounded up.
+*/
   let totalPages = Math.ceil ( list.length/10 );
-
-//im creating new elements here to use in this function scope
+/*Created new ul required to store the page links in li form. Looped thru
+each page required, appended it as an li with 'a' tags. Listener runs on
+every page.
+*/
   let div = document.createElement ( 'div' );
   let ul = document.createElement ( 'ul' );
 
-//appeneding elements to each other here
   div.className = 'pagination';
   pageDiv.appendChild ( div );
   div.appendChild ( ul );
 
-//creates an li (the page number) appended to the ul.appends an a tag to li
   for ( let i = 0; i < totalPages; i += 1 ) {
     let li = document.createElement ( 'li' );
-    let aTag = document.createElement ( 'a' );
+    let a = document.createElement ( 'a' );
 
-    aTag.textContent = i + 1;
-    li.className = 'pageNum';
-    li.appendChild ( aTag );
+    a.textContent = i + 1;
+    li.appendChild ( a );
     totalPages[i] = ul.appendChild ( li );
 
-
-//each number clicked calls the showPage function. working on the active/not active class
+/*
+Listen and handle the main functionality of the page links.
+First, get ALL 'a' tags. Then, loop thru the tags. If the tag was 'clicked',
+add the 'active' class to it. Otherwise, remove the 'active' class.
+showPage function is called at the end of the loop.
+*/
     li.addEventListener ( 'click', (event) => {
-      if ( event.target.className == 'pageNum' ) {
-        aTag.className = 'active';
+      let aTags = document.querySelectorAll ( 'a' );
+
+      for ( let i = 0; i < aTags.length; i += 1 ) {
+        if ( aTags[i] === event.target ) {
+          event.target.classList.add ( 'active' );
         } else {
-          aTag.className = '';
-          }
+          aTags[i].classList.remove ( 'active' );
+        }
+      }
       return showPage ( list, i+1 );
     });
   }
 };
 
-appendPageLinks ( list );
-*/
+//only way i've comeup with to start the page with the list hidden.Correct method?
+document.onLoad = showPage ( list, 0 ), appendPageLinks ( list );

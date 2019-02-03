@@ -11,44 +11,55 @@ const list = pageUl.children;
 //function displays only 10 students at a time per page
 const showPage = ( list, page ) => {
   for ( let i = 0; i < list.length; i += 1 ) {
-    const firstPageItem = ( ( page * 10 ) - 10 );
-    const lastPageItem = ( ( page * 10 ) - 1 );
-    if ( list[i] >= firstPageItem && list[i] <= lastPageItem ) {
-    list.style.display = 'block';
+    let firstPageItem = ( ( page * 10 ) - 10 );
+    let lastPageItem = ( ( page * 10 ) - 1 );
+    if ( i >= firstPageItem && i <= lastPageItem ) {
+    list[i].style.display = 'block';
   } else {
-    list.style.display = 'none';
+    list[i].style.display = 'none';
   }
 }
 };
 
+showPage ( list, 1 );
+
+/*
 const appendPageLinks = ( list ) => {
+
 //total pages will change with student number variances.rounded up
   let totalPages = Math.ceil ( list.length/10 );
+
 //im creating new elements here to use in this function scope
   let div = document.createElement ( 'div' );
   let ul = document.createElement ( 'ul' );
-  let li = document.createElement ( 'li' );
-  let aTag = document.createElement ( 'a' );
+
 //appeneding elements to each other here
   div.className = 'pagination';
   pageDiv.appendChild ( div );
   div.appendChild ( ul );
 
-//looping thru the number of pages and every loop gets a li with an a tag appended to the ul
-  for ( let i = 0; i < totalPages.length; i += 1 ) {
-    totalPages[i] = ul.appendChild ( li );
+//creates an li (the page number) appended to the ul.appends an a tag to li
+  for ( let i = 0; i < totalPages; i += 1 ) {
+    let li = document.createElement ( 'li' );
+    let aTag = document.createElement ( 'a' );
+
+    aTag.textContent = i + 1;
+    li.className = 'pageNum';
     li.appendChild ( aTag );
-    aTag.textContent = totalPages[i];
+    totalPages[i] = ul.appendChild ( li );
+
+
 //each number clicked calls the showPage function. working on the active/not active class
-    aTag.addEventListener ( 'click', (e) => {
-      showPage ( list, totalPages[i] );
-      if ( event.target.tagName == totalPages[i] ) {
+    li.addEventListener ( 'click', (event) => {
+      if ( event.target.className == 'pageNum' ) {
         aTag.className = 'active';
-      } else {
-        aTag.className = '';
-      }
+        } else {
+          aTag.className = '';
+          }
+      return showPage ( list, i+1 );
     });
   }
 };
 
-appendPageLinks (list);
+appendPageLinks ( list );
+*/

@@ -40,12 +40,21 @@ const list = pageUl.children;
        that will be passed into the parens later when you call or
        "invoke" the function
 ***/
+const showPage = ( list, page ) => {
+  for ( let i = 0; i < list.length; i += 1 ) {
+    const firstPageItem = ( ( page * 10 ) - 10 );
+    const lastPageItem = ( ( page * 10 ) - 1 );
+    if ( list[i] >= firstPageItem && list[i] <= lastPageItem ) {
+    list.style.display = 'block';
+  } else {
+    list.style.display = '';
+  }
+}
+};
 
 
-
-
-/*** 
-   Create the `appendPageLinks function` to generate, append, and add 
+/***
+   Create the `appendPageLinks function` to generate, append, and add
    functionality to the pagination buttons.
 ***/
 

@@ -7,7 +7,34 @@ FSJS project 2 - List Filter and Pagination
 const pageDiv = document.querySelector ( '.page' );
 const list = document.querySelector ( 'ul' );
 const studentList = list.children;
-const input = document.createElement ( 'input' );
+
+
+const searchBar = () => {
+  let div = document.querySelector ( '.page-header.cf' );
+  let input = document.createElement ( 'input' );
+  let button = document.createElement ( 'button' );
+
+  input.className = 'student-search';
+  input.placeHolder = 'Search...';
+  button.className = 'student-search';
+  button.textContent = 'Search';
+
+  div.appendChild ( input );
+  div.appendChild ( button );
+
+  for ( let i = 0; i < studentList.length; i += 1 ) {
+    let student = studentList[i];
+    let filter = input.textContent.toUpperCase();
+    let nameValue = student.textContent || student.textContent;
+    if ( nameValue.toUpperCase().indexOf ( filter ) > -1 ) {
+      studentList[i].style.display = 'block';
+    } else {
+      studentList[i].style.display = 'none';
+    }
+  }
+};
+
+
 
 //only 10 students will show per page. hide the rest
 const showPage = ( studentList, page ) => {
@@ -58,6 +85,7 @@ const appendPageLinks = ( list ) => {
 document.addEventListener ( 'DOMContentLoaded', () => {
   appendPageLinks ( studentList );
   showPage ( studentList, 1 )
+  searchBar ();
 //if there is an easier way to do this (below). I'd like to know.
   let startingPage = document.querySelector ( 'div.pagination ul li a' );
   startingPage.classList.add ( 'active' );

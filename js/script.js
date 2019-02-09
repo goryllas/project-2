@@ -7,33 +7,8 @@ FSJS project 2 - List Filter and Pagination
 const pageDiv = document.querySelector ( '.page' );
 const list = document.querySelector ( 'ul' );
 const studentList = list.children;
-
-
-const searchBar = () => {
-  let div = document.querySelector ( '.page-header.cf' );
-  let input = document.createElement ( 'input' );
-  let button = document.createElement ( 'button' );
-
-  input.className = 'student-search';
-  input.placeHolder = 'Search...';
-  button.className = 'student-search';
-  button.textContent = 'Search';
-
-  div.appendChild ( input );
-  div.appendChild ( button );
-
-  for ( let i = 0; i < studentList.length; i += 1 ) {
-    let student = studentList[i];
-    let filter = input.textContent.toUpperCase();
-    let nameValue = student.textContent || student.textContent;
-    if ( nameValue.toUpperCase().indexOf ( filter ) > -1 ) {
-      studentList[i].style.display = 'block';
-    } else {
-      studentList[i].style.display = 'none';
-    }
-  }
-};
-
+const studentDetails = document.querySelector ( '.student-details' );
+const studentName = studentDetails.querySelector ( 'h3' );
 
 
 //only 10 students will show per page. hide the rest
@@ -49,10 +24,9 @@ const showPage = ( studentList, page ) => {
 }
 };
 
+//creates the page links, appends them to the DOM, places functionality on them
 const appendPageLinks = ( list ) => {
-
   let totalPages = Math.ceil ( studentList.length/10 );
-
   let div = document.createElement ( 'div' );
   let ul = document.createElement ( 'ul' );
 
@@ -68,11 +42,12 @@ const appendPageLinks = ( list ) => {
     li.appendChild ( a );
     totalPages[i] = ul.appendChild ( li );
 
-    li.addEventListener ( 'click', (event) => {
+    li.addEventListener ( 'click', (e) => {
+      e.preventDefault();
       let aTags = document.querySelectorAll ( 'a' );
       for ( let i = 0; i < aTags.length; i += 1 ) {
-        if ( aTags[i] === event.target ) {
-          event.target.classList.add ( 'active' );
+        if ( aTags[i] === e.target ) {
+          e.target.classList.add ( 'active' );
           } else {
             aTags[i].classList.remove ( 'active' );
             }
@@ -82,11 +57,57 @@ const appendPageLinks = ( list ) => {
   }
 };
 
+
+//creates a search field to filter thru the student list
+const searchBar = () => {
+  let div = document.querySelector ( '.page-header.cf' );
+  let form = document.createElement ( 'form' );
+  let input = document.createElement ( 'input' );
+  let button = document.createElement ( 'button' );
+
+  form.id = 'search field';
+  form.className = 'student-search';
+  input.className = 'student-search';
+  input.placeHolder = 'Search...';
+  input.type = 'text';
+  button.className = 'student-search';
+  button.textContent = 'Search';
+
+  div.appendChild ( form );
+  div.appendChild ( button );
+  form.appendChild ( input );
+
+  const searchFilter = () => {
+      for ( let i = 0; i < studentList.length; i += 1 ) {
+        let name = studentList[i].querySelector('h3').innerHTML;
+        let filter = input.value.toUpperCase();
+          if ( name.toUpperCase().indexOf ( filter ) > -1 ) {
+          studentList[i].style.display = 'block';
+        } else {
+          studentList[i].style.display = 'none';
+        }
+      };
+  };
+
+  button.addEventListener ( 'click', (e) => {
+    e.preventDefault();
+    searchFilter();
+  });
+
+  form.addEventListener ( 'keyup', (e) => {
+    e.preventDefault();
+    searchFilter();
+  });
+};
+
+
 document.addEventListener ( 'DOMContentLoaded', () => {
   appendPageLinks ( studentList );
+
+  //webpage loads and dislays Page 1 'active'
   showPage ( studentList, 1 )
-  searchBar ();
-//if there is an easier way to do this (below). I'd like to know.
   let startingPage = document.querySelector ( 'div.pagination ul li a' );
   startingPage.classList.add ( 'active' );
+
+  searchBar ();
 });

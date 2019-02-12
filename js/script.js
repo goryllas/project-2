@@ -76,16 +76,25 @@ const searchBar = () => {
   form.appendChild ( input );
 
   const searchFilter = () => {
+    let results = false;
       for ( let i = 0; i < studentList.length; i += 1 ) {
         let name = studentList[i].querySelector('h3').innerHTML;
         let filter = input.value.toUpperCase();
           if ( name.toUpperCase().indexOf ( filter ) > -1 ) {
           studentList[i].style.display = 'block';
-        } else {
-          studentList[i].style.display = 'none';
-        }
+          results = true;
+          } else {
+            studentList[i].style.display = 'none';
+            }
       };
+      if ( results == false ) {
+        let p = document.createElement ( 'p' );
+        p.textContent = 'No Results'
+        list.appendChild ( p );
+      }
+
   };
+
 
   button.addEventListener ( 'click', (e) => {
     e.preventDefault();
@@ -99,14 +108,6 @@ const searchBar = () => {
 };
 
 
-const noResults = () => {
-  if ( studentList.style.display == 'none' ) {
-    let h3 = document.createElement ( 'h3' );
-    h2.textContent = 'No Results';
-    list.appendChild ( h3 );
-  }
-};
-
 document.addEventListener ( 'DOMContentLoaded', () => {
   appendPageLinks ( studentList );
 
@@ -116,5 +117,4 @@ document.addEventListener ( 'DOMContentLoaded', () => {
   startingPage.classList.add ( 'active' );
 
   searchBar ();
-  noResults ();
 });

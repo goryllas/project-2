@@ -6,10 +6,9 @@ FSJS project 2 - List Filter and Pagination
 
 const pageDiv = document.querySelector ( '.page' );
 const list = document.querySelector ( 'ul' );
-const studentList = list.children;
+const studentList = document.querySelectorAll ( '.student-item.cf' );
 const studentDetails = document.querySelector ( '.student-details' );
 const studentName = studentDetails.querySelector ( 'h3' );
-
 
 //only 10 students will show per page. hide the rest
 const showPage = ( studentList, page ) => {
@@ -20,8 +19,8 @@ const showPage = ( studentList, page ) => {
     studentList[i].style.display = 'block';
   } else {
     studentList[i].style.display = 'none';
+    }
   }
-}
 };
 
 //creates the page links, appends them to the DOM, places functionality on them
@@ -35,7 +34,6 @@ const appendPageLinks = ( list ) => {
   div.appendChild ( ul );
 
   for ( let i = 0; i < totalPages; i += 1 ) {
-
     let li = document.createElement ( 'li' );
     let a = document.createElement ( 'a' );
     a.textContent = i + 1;
@@ -101,6 +99,14 @@ const searchBar = () => {
 };
 
 
+const noResults = () => {
+  if ( studentList.style.display == 'none' ) {
+    let h3 = document.createElement ( 'h3' );
+    h2.textContent = 'No Results';
+    list.appendChild ( h3 );
+  }
+};
+
 document.addEventListener ( 'DOMContentLoaded', () => {
   appendPageLinks ( studentList );
 
@@ -110,4 +116,5 @@ document.addEventListener ( 'DOMContentLoaded', () => {
   startingPage.classList.add ( 'active' );
 
   searchBar ();
+  noResults ();
 });

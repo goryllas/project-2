@@ -6,7 +6,7 @@ FSJS project 2 - List Filter and Pagination
 
 const pageDiv = document.querySelector ( '.page' );
 const list = document.querySelector ( 'ul' );
-const studentList = document.querySelectorAll ( '.student-item.cf' );
+const studentList = list.children;
 const studentDetails = document.querySelector ( '.student-details' );
 const studentName = studentDetails.querySelector ( 'h3' );
 
@@ -55,6 +55,14 @@ const appendPageLinks = ( list ) => {
   }
 };
 
+//create and append error message if no students found in search
+const createNoResults = () => {
+  let noResults = document.createElement ( 'h2' );
+  noResults.className = 'no results';
+  noResults.textContent = 'No Results';
+  noResults.style.display = 'block';
+  pageDiv.appendChild ( noResults );
+};
 
 //creates a search field to filter thru the student list
 const searchBar = () => {
@@ -66,7 +74,7 @@ const searchBar = () => {
   form.id = 'search field';
   form.className = 'student-search';
   input.className = 'student-search';
-  input.placeHolder = 'Search...';
+  input.placeHolder = 'Search for students...';
   input.type = 'text';
   button.className = 'student-search';
   button.textContent = 'Search';
@@ -86,13 +94,10 @@ const searchBar = () => {
           } else {
             studentList[i].style.display = 'none';
             }
-      };
-      if ( results == false ) {
-        let p = document.createElement ( 'p' );
-        p.textContent = 'No Results'
-        list.appendChild ( p );
       }
-
+      if ( results == false ) {
+        createNoResults();
+      }
   };
 
 

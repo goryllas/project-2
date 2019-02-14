@@ -6,7 +6,7 @@ FSJS project 2 - List Filter and Pagination
 
 const pageDiv = document.querySelector ( '.page' );
 const list = document.querySelector ( 'ul' );
-const studentList = list.children;
+const studentList = document.querySelectorAll ( '.student-item.cf' );
 const studentDetails = document.querySelector ( '.student-details' );
 const studentName = studentDetails.querySelector ( 'h3' );
 
@@ -46,23 +46,25 @@ const appendPageLinks = ( list ) => {
       for ( let i = 0; i < aTags.length; i += 1 ) {
         if ( aTags[i] === e.target ) {
           e.target.classList.add ( 'active' );
-          } else {
-            aTags[i].classList.remove ( 'active' );
-            }
+        } else {
+          aTags[i].classList.remove ( 'active' );
+          }
         }
       return showPage ( studentList, i+1 );
     });
   }
 };
 
-//create and append error message if no students found in search
-const createNoResults = () => {
-  let noResults = document.createElement ( 'h2' );
-  noResults.className = 'no results';
-  noResults.textContent = 'No Results';
-  noResults.style.display = 'block';
-  pageDiv.appendChild ( noResults );
-};
+//removes pagination links
+const removePageLinks = () => {
+  let div = document.querySelector ( '.pagination' );
+  pageDiv.removeChild( div );
+}
+
+const startingPage = () => {
+  let start = document.querySelector ( 'div.pagination ul li a' );
+  start.classList.add ( 'active' );
+}
 
 //creates a search field to filter thru the student list
 const searchBar = () => {
@@ -83,43 +85,71 @@ const searchBar = () => {
   div.appendChild ( button );
   form.appendChild ( input );
 
+
   const searchFilter = () => {
-    let results = false;
-      for ( let i = 0; i < studentList.length; i += 1 ) {
-        let name = studentList[i].querySelector('h3').innerHTML;
-        let filter = input.value.toUpperCase();
-          if ( name.toUpperCase().indexOf ( filter ) > -1 ) {
-          studentList[i].style.display = 'block';
-          results = true;
-          } else {
-            studentList[i].style.display = 'none';
-            }
-      }
-      if ( results == false ) {
-        createNoResults();
-      }
+    let searchList = [];
+
+    for ( let i = 0; i < studentList.length; i += 1 ) {
+      let name = studentList[i].querySelector('h3').innerHTML;
+      let filter = input.value.toUpperCase();
+      if ( name.toUpperCase().indexOf ( filter ) > -1 ) {
+        studentList[i].style.display = 'block';
+        searchList.push(studentList[i]);
+      } else {
+        studentList[i].style.display = 'none';
+        }
+    }
+
+    showPage ( searchList, 1);
+    appendPageLinks ( searchList );
+
+    if ( searchList.length <= 0 ) {
+      let noResultsDiv = document.querySelector ( '.noResults' );
+      noResultsDiv.style.display = '';
+    }
+
   };
 
 
   button.addEventListener ( 'click', (e) => {
     e.preventDefault();
+    removePageLinks();
+    hideNoResults();
     searchFilter();
   });
 
   form.addEventListener ( 'keyup', (e) => {
     e.preventDefault();
+    removePageLinks();
+    hideNoResults();
     searchFilter();
   });
 };
 
+//creates a hidden message in case of no results in search
+const createNoResults = () => {
+  let div = document.createElement ( 'div' );
+  let h2 = document.createElement ( 'h2' );
+  div.className = 'noResults';
+  h2.textContent = 'No Results';
+  div.appendChild ( h2 );
+  pageDiv.appendChild ( div );
+  div.style.display = 'none';
+};
+
+//hides the 'No Results' message if displayed
+const hideNoResults = () => {
+  let noResultsDiv = document.querySelector ( '.noResults' );
+  noResultsDiv.style.display = 'none';
+}
 
 document.addEventListener ( 'DOMContentLoaded', () => {
+  showPage ( studentList, 1 );
   appendPageLinks ( studentList );
-
-  //webpage loads and dislays Page 1 'active'
-  showPage ( studentList, 1 )
-  let startingPage = document.querySelector ( 'div.pagination ul li a' );
-  startingPage.classList.add ( 'active' );
-
+  startingPage ();
   searchBar ();
+  createNoResults();
+
+
+
 });

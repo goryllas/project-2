@@ -68,26 +68,27 @@ const startingPage = () => {
 
 //creates a search field to filter thru the student list
 const searchBar = () => {
-  let div = document.querySelector ( '.page-header.cf' );
-  let form = document.createElement ( 'form' );
+  let pageHeadDiv = document.querySelector ( '.page-header.cf' );
+  let div = document.createElement ( 'div' );
   let input = document.createElement ( 'input' );
   let button = document.createElement ( 'button' );
 
-  form.id = 'search field';
-  form.className = 'student-search';
+  div.id = 'search field';
+  div.className = 'student-search';
   input.className = 'student-search';
   input.placeHolder = 'Search for students...';
   input.type = 'text';
   button.className = 'student-search';
   button.textContent = 'Search';
 
-  div.appendChild ( form );
+  pageHeadDiv.appendChild ( div );
   div.appendChild ( button );
-  form.appendChild ( input );
+  div.appendChild ( input );
 
 
   const searchFilter = () => {
     let searchList = [];
+
 
     for ( let i = 0; i < studentList.length; i += 1 ) {
       let name = studentList[i].querySelector('h3').innerHTML;
@@ -110,7 +111,6 @@ const searchBar = () => {
 
   };
 
-
   button.addEventListener ( 'click', (e) => {
     e.preventDefault();
     removePageLinks();
@@ -118,12 +118,13 @@ const searchBar = () => {
     searchFilter();
   });
 
-  form.addEventListener ( 'keyup', (e) => {
+  div.addEventListener ( 'keyup', (e) => {
     e.preventDefault();
     removePageLinks();
     hideNoResults();
     searchFilter();
   });
+
 };
 
 //creates a hidden message in case of no results in search

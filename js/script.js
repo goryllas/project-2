@@ -3,14 +3,13 @@ Treehouse Techdegree:
 FSJS project 2 - List Filter and Pagination
 ******************************************/
 
-
+//declared variables to be used through the code
 const pageDiv = document.querySelector ( '.page' );
-const list = document.querySelector ( 'ul' );
 const studentList = document.querySelectorAll ( '.student-item.cf' );
 const studentDetails = document.querySelector ( '.student-details' );
 const studentName = studentDetails.querySelector ( 'h3' );
 
-//only 10 students will show per page. hide the rest
+//shows 10 students max per page. hides the rest
 const showPage = ( studentList, page ) => {
   for ( let i = 0; i < studentList.length; i += 1 ) {
     let firstPageItem = ( ( page * 10 ) - 10 );
@@ -23,9 +22,9 @@ const showPage = ( studentList, page ) => {
   }
 };
 
-//creates the page links, appends them to the DOM, places functionality on them
+//creates page links required based on list length, appends, and adds function
 const appendPageLinks = ( list ) => {
-  let totalPages = Math.ceil ( studentList.length/10 );
+  let totalPages = Math.ceil ( list.length/10 );
   let div = document.createElement ( 'div' );
   let ul = document.createElement ( 'ul' );
 
@@ -39,7 +38,7 @@ const appendPageLinks = ( list ) => {
     a.textContent = i + 1;
     li.appendChild ( a );
     totalPages[i] = ul.appendChild ( li );
-
+//page links will show 'active' after click
     li.addEventListener ( 'click', (e) => {
       e.preventDefault();
       let aTags = document.querySelectorAll ( 'a' );
@@ -50,7 +49,7 @@ const appendPageLinks = ( list ) => {
           aTags[i].classList.remove ( 'active' );
           }
         }
-      return showPage ( studentList, i+1 );
+      return showPage ( list, i+1 );
     });
   }
 };
@@ -61,12 +60,43 @@ const removePageLinks = () => {
   pageDiv.removeChild( div );
 }
 
-const startingPage = () => {
-  let start = document.querySelector ( 'div.pagination ul li a' );
-  start.classList.add ( 'active' );
-}
+//takes the first page link available and gives it the 'active' class
+const firstActivePage = () => {
+  let div = document.querySelector ( '.pagination' );
+  let a = div. querySelector ( 'a' );
+  a.classList.add ( 'active' );
+};
 
-//creates a search field to filter thru the student list
+//iterates over list and compares user input to filter out names
+const searchFilter = () => {
+  removePageLinks();
+  let searchList = [];
+  let input = document.querySelector ( 'input.student-search' );
+
+  for ( let i = 0; i < studentList.length; i += 1 ) {
+    let name = studentList[i].querySelector('h3').innerHTML;
+    let filter = input.value.toUpperCase();
+    if ( name.toUpperCase().indexOf ( filter ) > -1 ) {
+      studentList[i].style.display = 'block';
+      searchList.push(studentList[i]);
+    } else {
+      studentList[i].style.display = 'none';
+      }
+  }
+  showPage ( searchList, 1 );
+  appendPageLinks ( searchList );
+//adjusts the 'active' page to the student list displayed
+  if ( searchList.length > 0 ) {
+    firstActivePage();
+  }
+//displays the hidden 'No Results' message if list meets required length
+  if ( searchList.length <= 0 ) {
+    let noResultsDiv = document.querySelector ( '.noResults' );
+    noResultsDiv.style.display = '';
+  }
+};
+
+//creates the search field, buttons, and functionality to filter thru students
 const searchBar = () => {
   let pageHeadDiv = document.querySelector ( '.page-header.cf' );
   let div = document.createElement ( 'div' );
@@ -86,48 +116,21 @@ const searchBar = () => {
   div.appendChild ( input );
 
 
-  const searchFilter = () => {
-    let searchList = [];
-
-
-    for ( let i = 0; i < studentList.length; i += 1 ) {
-      let name = studentList[i].querySelector('h3').innerHTML;
-      let filter = input.value.toUpperCase();
-      if ( name.toUpperCase().indexOf ( filter ) > -1 ) {
-        studentList[i].style.display = 'block';
-        searchList.push(studentList[i]);
-      } else {
-        studentList[i].style.display = 'none';
-        }
-    }
-
-    showPage ( searchList, 1);
-    appendPageLinks ( searchList );
-
-    if ( searchList.length <= 0 ) {
-      let noResultsDiv = document.querySelector ( '.noResults' );
-      noResultsDiv.style.display = '';
-    }
-
-  };
-
   button.addEventListener ( 'click', (e) => {
     e.preventDefault();
-    removePageLinks();
     hideNoResults();
     searchFilter();
   });
 
   div.addEventListener ( 'keyup', (e) => {
     e.preventDefault();
-    removePageLinks();
     hideNoResults();
     searchFilter();
   });
 
 };
 
-//creates a hidden message in case of no results in search
+//creates a hidden 'error' message in case of no results in search
 const createNoResults = () => {
   let div = document.createElement ( 'div' );
   let h2 = document.createElement ( 'h2' );
@@ -144,13 +147,11 @@ const hideNoResults = () => {
   noResultsDiv.style.display = 'none';
 }
 
+//functions called on JS load
 document.addEventListener ( 'DOMContentLoaded', () => {
   showPage ( studentList, 1 );
   appendPageLinks ( studentList );
-  startingPage ();
+  firstActivePage ();
   searchBar ();
   createNoResults();
-
-
-
 });

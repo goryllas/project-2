@@ -12,8 +12,8 @@ const studentName = studentDetails.querySelector ( 'h3' );
 //shows 10 students max per page. hides the rest
 const showPage = ( studentList, page ) => {
   for ( let i = 0; i < studentList.length; i += 1 ) {
-    let firstPageItem = ( ( page * 10 ) - 10 );
-    let lastPageItem = ( ( page * 10 ) - 1 );
+    const firstPageItem = ( ( page * 10 ) - 10 );
+    const lastPageItem = ( ( page * 10 ) - 1 );
     if ( i >= firstPageItem && i <= lastPageItem ) {
     studentList[i].style.display = 'block';
   } else {
@@ -24,9 +24,9 @@ const showPage = ( studentList, page ) => {
 
 //creates page links required based on list length, appends, and adds function
 const appendPageLinks = ( list ) => {
-  let totalPages = Math.ceil ( list.length/10 );
-  let div = document.createElement ( 'div' );
-  let ul = document.createElement ( 'ul' );
+  const totalPages = Math.ceil ( list.length/10 );
+  const div = document.createElement ( 'div' );
+  const ul = document.createElement ( 'ul' );
 
   div.className = 'pagination';
   pageDiv.appendChild ( div );
